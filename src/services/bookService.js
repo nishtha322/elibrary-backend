@@ -5,7 +5,7 @@ const { PDFDocument, rgb, degrees } = require("pdf-lib");
 const bookRepository = require("../repositories/bookRepository");
 const categoryRepository = require("../repositories/categoryRepository");
 const downloadRepository = require("../repositories/downloadRepository");
-
+const aiService = require("./aiService");
 // Get all books
 async function getBooks() {
     return bookRepository.getAllBooks();
@@ -220,6 +220,25 @@ return {
     fileName: `${path.parse(book.title).name}-watermarked.pdf`
 };
 }
+async function generateBookSummary(id) {
+    const book = await bookRepository.findBookById(id);
+
+    if (!book) {
+        throw new Error("Book not found");
+    }
+
+    if (!book.content) {
+        throw new Error("Book content not available");
+    }
+
+    const summary = await aiService.generateBookSummary(book);
+
+    return {
+        bookId: book.id,
+        title: book.title,
+        summary
+    };
+}
 module.exports = {
     getBooks,
     getBookById,
@@ -229,5 +248,6 @@ module.exports = {
     searchBooks,
     readBook,
     downloadBook,
-    getWatermarkedBook
+    getWatermarkedBook,
+    generateBookSummary
 };

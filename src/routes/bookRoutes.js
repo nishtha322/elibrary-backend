@@ -22,6 +22,11 @@ router.get(
     authenticate,
     bookController.downloadBook
 );
+router.post(
+    "/:id/summary",
+  
+    bookController.generateBookSummary
+);
 router.get("/:id", bookController.getBookById);
 
 // Only admins can manage books

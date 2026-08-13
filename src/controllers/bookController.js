@@ -264,6 +264,36 @@ async function downloadBook(req, res) {
         });
     }
 }
+async function generateBookSummary(req, res) {
+    try {
+        const { id } = req.params;
+
+        const result = await bookService.generateBookSummary(id);
+
+        res.status(200).json({
+            message: "Book summary generated successfully",
+            book: result
+        });
+    } catch (error) {
+        if (error.message === "Book not found") {
+            return res.status(404).json({
+                message: "Book not found"
+            });
+        }
+
+        if (error.message === "Book content not available") {
+            return res.status(404).json({
+                message: "Book content not available"
+            });
+        }
+
+        console.error("Error generating book summary:", error);
+
+        res.status(500).json({
+            message: "Failed to generate book summary"
+        });
+    }
+}
 module.exports = {
     getBooks,
     getBookById,
@@ -272,5 +302,6 @@ module.exports = {
     deleteBook,
     searchBooks,
     readBook,
-    downloadBook
+    downloadBook,
+    generateBookSummary
 };
