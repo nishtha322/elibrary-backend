@@ -5,6 +5,7 @@ const { PDFDocument, rgb, degrees } = require("pdf-lib");
 const bookRepository = require("../repositories/bookRepository");
 const categoryRepository = require("../repositories/categoryRepository");
 const downloadRepository = require("../repositories/downloadRepository");
+const reviewRepository = require("../repositories/reviewRepository");
 const aiService = require("./aiService");
 // Get all books
 async function getBooks() {
@@ -228,7 +229,12 @@ async function generateBookSummary(id) {
         throw new Error("Book content not available");
     }
 
-    const summary = await aiService.generateBookSummary(book);
+    const reviews = await reviewRepository.getBookReviews(id);
+
+    const summary = await aiService.generateBookSummary(
+        book,
+        reviews
+    );
 
     return {
         bookId: book.id,

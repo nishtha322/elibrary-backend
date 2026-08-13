@@ -15,6 +15,7 @@ const readingBookmarkRoutes = require("./routes/readingBookmarkRoutes");
 const highlightRoutes = require("./routes/highlightRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -34,5 +35,7 @@ app.use("/api", highlightRoutes);
 app.use("/api", wishlistRoutes);
 // Mount the dashboard routes
 app.use("/api", dashboardRoutes);
+// Mount the review routes
+app.use("/api", reviewRoutes);
 
 module.exports = app;
