@@ -123,8 +123,93 @@ async function deleteBookById(id) {
     return result.affectedRows > 0;
 }
 // Search books by title or author
-async function searchBooks(query) {
-    const [rows] = await db.query(`
+// Advanced search books
+async function searchBooks({
+    q,
+    title,
+    author,
+    categoryId,
+    page = 1,
+    limit = 10,
+    sort = "created_at",
+    order = "desc"
+}) {
+    const conditions = [];
+    const params = [];
+
+    // General keyword search
+    if (q) {
+        conditions.push(`
+            (
+                b.title LIKE ?
+                OR b.author LIKE ?
+                OR b.description LIKE ?
+            )
+        `);
+
+        const keyword = `%${q}%`;
+        params.push(keyword, keyword, keyword);
+    }
+
+    // Search specifically by title
+    if (title) {
+        conditions.push("b.title LIKE ?");
+        params.push(`%${title}%`);
+    }
+
+    // Search specifically by author
+    if (author) {
+        conditions.push("b.author LIKE ?");
+        params.push(`%${author}%`);
+    }
+
+    // Filter by category
+    if (categoryId) {
+        conditions.push("b.category_id = ?");
+        params.push(categoryId);
+    }
+
+    const whereClause =
+        conditions.length > 0
+            ? `WHERE ${conditions.join(" AND ")}`
+            : "";
+
+    // Whitelist sortable columns
+    const allowedSortFields = {
+        title: "b.title",
+        author: "b.author",
+        created_at: "b.created_at"
+    };
+
+    const sortColumn =
+        allowedSortFields[sort] || allowedSortFields.created_at;
+
+    const sortOrder =
+        order.toLowerCase() === "asc" ? "ASC" : "DESC";
+
+    // Make sure pagination values are valid
+    page = Math.max(parseInt(page) || 1, 1);
+    limit = Math.min(Math.max(parseInt(limit) || 10, 1), 50);
+
+    const offset = (page - 1) * limit;
+
+    // Get total matching books
+    const [countRows] = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM books b
+        LEFT JOIN categories c
+            ON b.category_id = c.id
+        ${whereClause}
+        `,
+        params
+    );
+
+    const total = countRows[0].total;
+
+    // Get paginated books
+    const [rows] = await db.query(
+        `
         SELECT
             b.id,
             b.title,
@@ -139,12 +224,22 @@ async function searchBooks(query) {
         FROM books b
         LEFT JOIN categories c
             ON b.category_id = c.id
-        WHERE b.title LIKE ?
-           OR b.author LIKE ?
-        ORDER BY b.created_at DESC
-    `, [`%${query}%`, `%${query}%`]);
+        ${whereClause}
+        ORDER BY ${sortColumn} ${sortOrder}
+        LIMIT ? OFFSET ?
+        `,
+        [...params, limit, offset]
+    );
 
-    return rows;
+    return {
+        books: rows,
+        pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    };
 }
 module.exports = {
     getAllBooks,

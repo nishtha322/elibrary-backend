@@ -104,12 +104,9 @@ async function removeBook(id) {
     await bookRepository.deleteBookById(id);
 }
 // Search books
-async function searchBooks(query) {
-    if (!query || !query.trim()) {
-        throw new Error("Search query is required");
-    }
-
-    return bookRepository.searchBooks(query.trim());
+// Advanced search books
+async function searchBooks(filters) {
+    return bookRepository.searchBooks(filters);
 }
 // Get book content for reading
 async function readBook(id) {

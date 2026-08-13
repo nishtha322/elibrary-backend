@@ -173,21 +173,34 @@ async function deleteBook(req, res) {
     }
 }
 // Search books
+// Advanced search books
 async function searchBooks(req, res) {
     try {
-        const { q } = req.query;
+        const {
+            q,
+            title,
+            author,
+            category_id,
+            page,
+            limit,
+            sort,
+            order
+        } = req.query;
 
-        if (!q || !q.trim()) {
-            return res.status(400).json({
-                message: "Search query is required"
-            });
-        }
-
-        const books = await bookService.searchBooks(q);
+        const result = await bookService.searchBooks({
+            q: q?.trim(),
+            title: title?.trim(),
+            author: author?.trim(),
+            categoryId: category_id,
+            page,
+            limit,
+            sort,
+            order
+        });
 
         res.status(200).json({
             message: "Books search completed successfully",
-            books
+            ...result
         });
     } catch (error) {
         console.error("Error searching books:", error);
