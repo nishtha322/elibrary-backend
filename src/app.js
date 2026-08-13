@@ -13,6 +13,7 @@ const bookRoutes = require("./routes/bookRoutes");
 const downloadRoutes = require("./routes/downloadRoutes");
 const readingBookmarkRoutes = require("./routes/readingBookmarkRoutes");
 const highlightRoutes = require("./routes/highlightRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -28,5 +29,7 @@ app.use("/api/downloads", downloadRoutes);
 app.use("/api", readingBookmarkRoutes); 
 // Mount the highlight routes
 app.use("/api", highlightRoutes);
+// Mount the wishlist routes
+app.use("/api", wishlistRoutes);
 
 module.exports = app;
