@@ -1,5 +1,5 @@
 // app.js
-// Express application setup
+
 
 const express = require("express");
 const cors = require("cors");
@@ -12,6 +12,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const downloadRoutes = require("./routes/downloadRoutes");
 const readingBookmarkRoutes = require("./routes/readingBookmarkRoutes");
+const highlightRoutes = require("./routes/highlightRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -25,5 +26,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/downloads", downloadRoutes);
 // Mount the reading bookmark routes
 app.use("/api", readingBookmarkRoutes); 
+// Mount the highlight routes
+app.use("/api", highlightRoutes);
 
 module.exports = app;
