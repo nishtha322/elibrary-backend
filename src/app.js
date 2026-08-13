@@ -11,6 +11,7 @@ const authRoutes = require("./routes/authRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const downloadRoutes = require("./routes/downloadRoutes");
+const readingBookmarkRoutes = require("./routes/readingBookmarkRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -22,5 +23,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/books", bookRoutes);
 // Mount the download routes
 app.use("/api/downloads", downloadRoutes);
+// Mount the reading bookmark routes
+app.use("/api", readingBookmarkRoutes); 
 
 module.exports = app;
