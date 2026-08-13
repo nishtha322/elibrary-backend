@@ -4,6 +4,7 @@ const fs = require("fs/promises");
 const { PDFDocument, rgb, degrees } = require("pdf-lib");
 const bookRepository = require("../repositories/bookRepository");
 const categoryRepository = require("../repositories/categoryRepository");
+const downloadRepository = require("../repositories/downloadRepository");
 
 // Get all books
 async function getBooks() {
@@ -211,10 +212,13 @@ async function getWatermarkedBook(id, user) {
 
     const watermarkedPdf = await pdfDoc.save();
 
-    return {
-        pdf: Buffer.from(watermarkedPdf),
-        fileName: `${path.parse(book.title).name}-watermarked.pdf`
-    };
+// Record the download
+await downloadRepository.createDownload(user.id, book.id);
+
+return {
+    pdf: Buffer.from(watermarkedPdf),
+    fileName: `${path.parse(book.title).name}-watermarked.pdf`
+};
 }
 module.exports = {
     getBooks,
