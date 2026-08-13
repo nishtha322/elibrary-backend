@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS books (
     category_id INT,
     content LONGTEXT,
     file_path VARCHAR(500),
+    cover_image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
