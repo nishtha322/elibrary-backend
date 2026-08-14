@@ -22,8 +22,16 @@ async function createCategory(req, res) {
         const category = await categoryService.createCategory(name, description);
         res.status(201).json({ message: "Category created successfully", category });
     } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+    if (error.message === "Category already exists") {
+        return res.status(409).json({
+            message: error.message
+        });
     }
+
+    return res.status(500).json({
+        message: "Internal server error"
+    });
+}
 }
 
 // delete a category

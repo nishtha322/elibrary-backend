@@ -52,12 +52,13 @@ ${readerFeedback}`
             max_tokens: 1200,
             temperature: 0.3
         },
-        {
-            headers: {
-                Authorization: `Bearer ${process.env.AI_API_TOKEN}`,
-                "Content-Type": "application/json"
-            }
-        }
+      {
+    timeout: 15000,
+    headers: {
+        Authorization: `Bearer ${process.env.AI_API_TOKEN}`,
+        "Content-Type": "application/json"
+    }
+}
     );
 
     return response.data.choices[0].message.content;

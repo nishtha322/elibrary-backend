@@ -87,9 +87,10 @@ async function updateReview(
         throw new Error("Review not found");
     }
 
-    return reviewRepository.findUserReviewById
-        ? reviewRepository.findUserReviewById(reviewId, userId)
-        : reviewRepository.findUserReview(userId, null);
+   return reviewRepository.findReviewById(
+    reviewId,
+    userId
+);
 }
 
 // Delete own review

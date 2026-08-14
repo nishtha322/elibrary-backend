@@ -124,40 +124,7 @@ async function readBook(id) {
         content: book.content
     };
 }
-// Get book file for download
-async function downloadBook(id) {
-    const book = await bookRepository.findBookById(id);
 
-    if (!book) {
-        throw new Error("Book not found");
-    }
-
-    if (!book.file_path) {
-        throw new Error("Book file not available");
-    }
-
-    const relativePath = book.file_path.replace(/^[/\\]+/, "");
-
-    const filePath = path.resolve(
-        __dirname,
-        "../../files",
-        relativePath
-    );
-
-    const booksDirectory = path.resolve(
-        __dirname,
-        "../../files/books"
-    );
-
-    if (!filePath.startsWith(booksDirectory)) {
-        throw new Error("Invalid book file path");
-    }
-
-    return {
-        filePath,
-        fileName: path.basename(filePath)
-    };
-}
 async function getWatermarkedBook(id, user) {
     const book = await bookRepository.findBookById(id);
 
@@ -250,7 +217,6 @@ module.exports = {
     removeBook,
     searchBooks,
     readBook,
-    downloadBook,
     getWatermarkedBook,
     generateBookSummary
 };

@@ -24,7 +24,7 @@ router.get(
 );
 router.post(
     "/:id/summary",
-  
+    authenticate,
     bookController.generateBookSummary
 );
 router.get("/:id", bookController.getBookById);

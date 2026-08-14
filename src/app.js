@@ -37,5 +37,27 @@ app.use("/api", wishlistRoutes);
 app.use("/api", dashboardRoutes);
 // Mount the review routes
 app.use("/api", reviewRoutes);
+// Handle unknown routes
+app.use((req, res) => {
+    return res.status(404).json({
+        message: "Route not found"
+    });
+});
+
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    if (err.type === "entity.parse.failed") {
+        return res.status(400).json({
+            message: "Invalid JSON in request body"
+        });
+    }
+
+    console.error(err);
+
+    return res.status(500).json({
+        message: "Internal server error"
+    });
+});
 
 module.exports = app;
