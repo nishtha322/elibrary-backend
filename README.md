@@ -24,8 +24,8 @@ Make sure the following are installed:
 ## 1. Clone Repository
 
 ``` bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd backend
+git clone https://github.com/nishtha322/elibrary-backend.git
+cd elibrary-backend
 ```
 
 ## 2. Install Dependencies
@@ -57,7 +57,7 @@ DB_NAME=e_library
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRES_IN=1h
 
-AI_API_TOKEN=your_userfacet_ai_token
+AI_API_TOKEN=sk-0d2e211d182a431b837f73f986fb0e78
 ```
 
 ## 5. Run Migration
