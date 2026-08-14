@@ -7,15 +7,36 @@ async function register(req, res) {
 
     try{
         const { name, email, password } = req.body;
+
         if(!name || !email || !password){
-            return res.status(400).json({ message: "Name, email, and password are required" });
+            return res.status(400).json({ 
+                message: "Name, email, and password are required" 
+            });
         }
+
+        // Password validation
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+        if(!passwordRegex.test(password)){
+            return res.status(400).json({
+                message:
+                "Password must be at least 8 characters and contain uppercase, lowercase, number and special character"
+            });
+        }
+
         const user = await authService.registerUser(name, email, password);
-        res.status(201).json({ message: "User registered successfully", user });
+
+        res.status(201).json({ 
+            message: "User registered successfully", 
+            user 
+        });
+
     } catch (error) {
-         if(error.message === "User already exists"){
+        if(error.message === "User already exists"){
             return res.status(409).json({ message: error.message });
         }
+
         res.status(500).json({ message: "Internal server error" });
     }
 }
